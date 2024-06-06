@@ -28,17 +28,13 @@ public class Payment {
     private String description;
 
     private LocalDateTime paymentDate;
-
-    @NotBlank(message = "Valor é obrigatório")
     private BigDecimal value;
 
     @ManyToOne
     @JoinColumn(name = "id_category")
     @Enumerated(EnumType.ORDINAL)
-    @NotBlank(message = "Categoria é obrigatório")
     private Category category;
 
-    @NotBlank(message = "Status é obrigatório")
     @Enumerated(EnumType.STRING)
     private Status status;
 }
