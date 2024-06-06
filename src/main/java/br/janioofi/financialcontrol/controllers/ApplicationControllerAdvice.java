@@ -1,5 +1,6 @@
 package br.janioofi.financialcontrol.controllers;
 
+import br.janioofi.financialcontrol.domain.exceptions.BusinessException;
 import br.janioofi.financialcontrol.domain.exceptions.RecordNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,13 @@ public class ApplicationControllerAdvice {
     @ExceptionHandler(RecordNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public String handleNotFoundException(RecordNotFoundException ex){
+        log.error(ex.getMessage());
+        return ex.getMessage();
+    }
+
+    @ExceptionHandler(BusinessException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleBusinessException(BusinessException ex){
         log.error(ex.getMessage());
         return ex.getMessage();
     }
