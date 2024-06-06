@@ -65,6 +65,11 @@ public class PaymentService {
         repository.deleteById(id);
     }
 
+    public List<PaymentDto> findPaymentsByPeriod(String initialDate, String finalDate){
+        List<Payment> payments = repository.findPaymentsByPeriod(initialDate, finalDate);
+        return payments.stream().map(this::toDto).toList();
+    }
+
     private PaymentDto toDto(Payment payment){
         return new PaymentDto(payment.getIdPayment(), payment.getDescription(),
                 payment.getPaymentDate(), payment.getValue(), payment.getCategory().getDescription(),

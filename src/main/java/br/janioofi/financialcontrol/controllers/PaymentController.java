@@ -42,4 +42,9 @@ public class PaymentController {
     public ResponseEntity<PaymentDto> update(@RequestBody PaymentDto paymentDto, @PathVariable Long id){
         return ResponseEntity.ok().body(service.update(id, paymentDto));
     }
+
+    @GetMapping("/period")
+    public ResponseEntity<List<PaymentDto>> findPaymentsByPeriod(@RequestParam String initialDate, @RequestParam String finalDate){
+        return ResponseEntity.ok().body(service.findPaymentsByPeriod(initialDate, finalDate));
+    }
 }
