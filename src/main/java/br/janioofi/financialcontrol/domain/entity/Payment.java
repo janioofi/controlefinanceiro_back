@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tb_payment")
@@ -27,7 +27,7 @@ public class Payment {
     @NotBlank(message = "Descrição é obrigatório")
     private String description;
 
-    private LocalDateTime paymentDate;
+    private LocalDate paymentDate;
     private BigDecimal value;
 
     @ManyToOne

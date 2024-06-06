@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +36,7 @@ public class PaymentService {
         Payment payment = new Payment();
         Category category = categoryRepository.findById(paymentDto.idCategory()).orElseThrow(() -> new RecordNotFoundException(NO_CATEGORIES + paymentDto.idCategory()));
 
-        payment.setPaymentDate(LocalDateTime.now());
+        payment.setPaymentDate(paymentDto.paymentDate());
         payment.setDescription(paymentDto.description());
         payment.setCategory(category);
         payment.setValue(paymentDto.value());
