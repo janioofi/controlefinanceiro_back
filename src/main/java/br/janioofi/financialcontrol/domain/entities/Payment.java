@@ -1,5 +1,6 @@
-package br.janioofi.financialcontrol.domain.entity;
+package br.janioofi.financialcontrol.domain.entities;
 
+import br.janioofi.financialcontrol.domain.enums.PaymentMethod;
 import br.janioofi.financialcontrol.domain.enums.Status;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -37,4 +38,7 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     private Status status;
+
+    @Enumerated(EnumType.STRING)
+    private PaymentMethod paymentMethod;
 }

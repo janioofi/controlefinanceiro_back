@@ -1,6 +1,6 @@
 package br.janioofi.financialcontrol.domain.repositories;
 
-import br.janioofi.financialcontrol.domain.entity.Payment;
+import br.janioofi.financialcontrol.domain.entities.Payment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

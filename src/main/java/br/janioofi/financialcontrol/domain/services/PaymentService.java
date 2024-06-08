@@ -1,8 +1,8 @@
 package br.janioofi.financialcontrol.domain.services;
 
 import br.janioofi.financialcontrol.domain.dtos.PaymentDto;
-import br.janioofi.financialcontrol.domain.entity.Category;
-import br.janioofi.financialcontrol.domain.entity.Payment;
+import br.janioofi.financialcontrol.domain.entities.Category;
+import br.janioofi.financialcontrol.domain.entities.Payment;
 import br.janioofi.financialcontrol.domain.exceptions.RecordNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.CategoryRepository;
 import br.janioofi.financialcontrol.domain.repositories.PaymentRepository;
@@ -41,6 +41,7 @@ public class PaymentService {
         payment.setCategory(category);
         payment.setValue(paymentDto.value());
         payment.setStatus(paymentDto.status());
+        payment.setPaymentMethod(paymentDto.paymentMethod());
         log.info("Creating new payment: " + paymentDto.description());
 
         return this.toDto(repository.save(payment));
@@ -54,6 +55,7 @@ public class PaymentService {
             data.setDescription(paymentDto.description());
             data.setCategory(category);
             data.setValue(paymentDto.value());
+            data.setPaymentMethod(paymentDto.paymentMethod());
             return repository.save(data);
         }).orElseThrow(() -> new RecordNotFoundException(NO_PAYMENT + id));
         return this.toDto(payment);
@@ -73,6 +75,6 @@ public class PaymentService {
     private PaymentDto toDto(Payment payment){
         return new PaymentDto(payment.getIdPayment(), payment.getDescription(),
                 payment.getPaymentDate(), payment.getValue(), payment.getCategory().getDescription(),
-                payment.getCategory().getIdCategory(), payment.getStatus());
+                payment.getCategory().getIdCategory(), payment.getStatus(), payment.getPaymentMethod());
     }
 }

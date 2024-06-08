@@ -1,5 +1,6 @@
 package br.janioofi.financialcontrol.domain.dtos;
 
+import br.janioofi.financialcontrol.domain.enums.PaymentMethod;
 import br.janioofi.financialcontrol.domain.enums.Status;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -13,5 +14,6 @@ public record PaymentDto(
         BigDecimal value,
         String category,
         Long idCategory,
-        Status status) {
+        Status status,
+        PaymentMethod paymentMethod) {
 }

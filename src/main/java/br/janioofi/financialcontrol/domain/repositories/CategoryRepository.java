@@ -1,6 +1,6 @@
 package br.janioofi.financialcontrol.domain.repositories;
 
-import br.janioofi.financialcontrol.domain.entity.Category;
+import br.janioofi.financialcontrol.domain.entities.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

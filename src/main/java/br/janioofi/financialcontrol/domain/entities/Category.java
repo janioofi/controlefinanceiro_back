@@ -1,4 +1,4 @@
-package br.janioofi.financialcontrol.domain.entity;
+package br.janioofi.financialcontrol.domain.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;

@@ -1,8 +1,8 @@
 package br.janioofi.financialcontrol.domain.services;
 
 import br.janioofi.financialcontrol.domain.dtos.CategoryDto;
-import br.janioofi.financialcontrol.domain.entity.Category;
-import br.janioofi.financialcontrol.domain.entity.Payment;
+import br.janioofi.financialcontrol.domain.entities.Category;
+import br.janioofi.financialcontrol.domain.entities.Payment;
 import br.janioofi.financialcontrol.domain.exceptions.BusinessException;
 import br.janioofi.financialcontrol.domain.exceptions.RecordNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.CategoryRepository;
