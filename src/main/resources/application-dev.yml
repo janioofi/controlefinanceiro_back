@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: financial-control
+server:
+  port: 8080

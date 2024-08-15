@@ -1,0 +1,13 @@
+spring:
+  application:
+    name: financial-control
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/financial_control
+    username: root
+    password: 12345678
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8080
