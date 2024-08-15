@@ -1,5 +1,6 @@
 package br.janioofi.financialcontrol.domain.entities;
 
+import br.janioofi.financialcontrol.domain.enums.Category;
 import br.janioofi.financialcontrol.domain.enums.PaymentMethod;
 import br.janioofi.financialcontrol.domain.enums.Status;
 import jakarta.persistence.*;
@@ -12,12 +13,11 @@ import lombok.Setter;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-@Entity
-@Table(name = "tb_payment")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Entity(name = "tb_payment")
 public class Payment {
 
     @Id
@@ -31,9 +31,7 @@ public class Payment {
     private LocalDate paymentDate;
     private BigDecimal value;
 
-    @ManyToOne
-    @JoinColumn(name = "id_category")
-    @Enumerated(EnumType.ORDINAL)
+    @Enumerated(EnumType.STRING)
     private Category category;
 
     @Enumerated(EnumType.STRING)
@@ -41,4 +39,9 @@ public class Payment {
 
     @Enumerated(EnumType.STRING)
     private PaymentMethod paymentMethod;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user")
+    @Enumerated(EnumType.ORDINAL)
+    private User user;
 }

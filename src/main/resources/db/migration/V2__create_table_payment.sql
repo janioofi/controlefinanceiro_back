@@ -4,11 +4,12 @@ CREATE TABLE tb_payment
     description    VARCHAR(255),
     payment_date   date,
     value          DECIMAL,
-    id_category    BIGINT,
+    category       VARCHAR(255),
     status         VARCHAR(255),
     payment_method VARCHAR(255),
+    id_user        BIGINT,
     CONSTRAINT pk_tb_payment PRIMARY KEY (id_payment)
 );
 
 ALTER TABLE tb_payment
-    ADD CONSTRAINT FK_TB_PAYMENT_ON_ID_CATEGORY FOREIGN KEY (id_category) REFERENCES tb_category (id_category);
+    ADD CONSTRAINT FK_TB_PAYMENT_ON_ID_USER FOREIGN KEY (id_user) REFERENCES tb_user (id_user);

@@ -10,9 +10,6 @@ import java.util.Optional;
 
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
 
-    @Query(value = "SELECT * FROM tb_payment WHERE id_category = :id",  nativeQuery = true)
-    Optional<List<Payment>> findPaymentByCategory(@Param("id") Long id);
-
     @Query(value = """
     SELECT * FROM tb_payment p
     WHERE CAST(p.payment_date AS date) BETWEEN CAST(:initialDate AS date) AND CAST(:finalDate AS date)
