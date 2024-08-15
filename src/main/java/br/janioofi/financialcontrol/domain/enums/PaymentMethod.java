@@ -1,10 +1,13 @@
 package br.janioofi.financialcontrol.domain.enums;
 
+import lombok.Getter;
+
+@Getter
 public enum PaymentMethod {
-    MONEY(0, "MONEY"),
-    PIX(1, "PIX"),
-    DEBIT_CARD(2, "DEBIT CARD"),
-    CRED_CARD(3, "CRED CARD");
+    MONEY(0, "Dinheiro"),
+    PIX(1, "Pix"),
+    DEBIT_CARD(2, "Cartão de débito"),
+    CRED_CARD(3, "Cartão de crédito");
 
     private final Integer code;
     private final String description;
