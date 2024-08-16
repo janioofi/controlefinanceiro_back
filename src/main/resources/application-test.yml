@@ -9,5 +9,9 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+api:
+  security:
+    token:
+      secret: ${SECRET:default}
 server:
   port: 8080
