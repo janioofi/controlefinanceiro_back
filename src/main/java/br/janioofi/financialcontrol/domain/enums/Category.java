@@ -4,8 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum Category {
-    STUDIES(0, "Estudos"),
-    LEISURE(1, "Lazer"),
+
+    LEISURE(0, "Lazer"),
+    STUDIES(1, "Estudos"),
     FOOD(2, "Alimentação"),
     HOUSING(3, "Moradia"),
     TRANSPORT(4, "Transporte"),

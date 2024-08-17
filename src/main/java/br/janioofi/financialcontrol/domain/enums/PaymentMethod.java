@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum PaymentMethod {
+
     MONEY(0, "Dinheiro"),
     PIX(1, "Pix"),
     DEBIT_CARD(2, "Cartão de débito"),

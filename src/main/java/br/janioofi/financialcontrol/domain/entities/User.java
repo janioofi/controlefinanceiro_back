@@ -12,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -32,6 +33,15 @@ public class User implements UserDetails {
     @Column(nullable = false)
     @NotBlank(message = "Senha é obrigatória")
     private String password;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<Payment> payments;
+
+    public User(Long idUser, String email, String password) {
+        this.email = email;
+        this.idUser = idUser;
+        this.password = password;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

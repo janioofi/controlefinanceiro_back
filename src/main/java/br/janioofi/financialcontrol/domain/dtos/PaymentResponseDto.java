@@ -13,5 +13,5 @@ public record PaymentResponseDto(
         String category,
         String status,
         String paymentMethod,
-        Long idUser) {
+        String user) {
 }

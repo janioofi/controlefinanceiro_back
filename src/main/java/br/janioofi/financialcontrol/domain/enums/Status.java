@@ -4,6 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum Status {
+
     PENDING(0, "Pendente"),
     APPROVED(1, "Aprovado"),
     CANCELED(2, "Cancelado");

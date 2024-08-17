@@ -19,7 +19,7 @@ public class Mapper {
                 payment.getCategory().getDescription(),
                 payment.getStatus().getDescription(),
                 payment.getPaymentMethod().getDescription(),
-                payment.getUser().getIdUser());
+                payment.getUser().getEmail());
     }
 
     public static UserResponseDto toDto(User user){
