@@ -7,12 +7,15 @@ import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.info.License;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
+import io.swagger.v3.oas.models.servers.Server;
 import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 
 @Configuration
-public class Swagger {
+@Profile("prod")
+public class SwaggerProd {
 
     @Bean
     public GroupedOpenApi publicApi(){
@@ -35,6 +38,7 @@ public class Swagger {
                         addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes
                         ("Bearer Authentication", createAPIKeyScheme()))
+                .addServersItem(new Server().url("**"))
                 .info(new Info()
                         .title("Financial Control - API")
                         .description("Rest API of a financial control system")

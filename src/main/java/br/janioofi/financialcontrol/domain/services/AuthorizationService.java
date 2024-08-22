@@ -1,6 +1,5 @@
 package br.janioofi.financialcontrol.domain.services;
 
-import br.janioofi.financialcontrol.domain.exceptions.ResourceNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -16,6 +15,6 @@ public class AuthorizationService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return repository.findByUsername(username).orElseThrow(() -> new ResourceNotFoundException(NO_USER_USERNAME + username));
+        return repository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(NO_USER_USERNAME + username));
     }
 }

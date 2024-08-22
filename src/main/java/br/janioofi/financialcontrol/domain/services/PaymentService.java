@@ -8,7 +8,7 @@ import br.janioofi.financialcontrol.domain.entities.User;
 import br.janioofi.financialcontrol.domain.exceptions.ResourceNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.PaymentRepository;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest; // Use HttpServletRequest em vez de HttpServletResponse
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -23,21 +23,23 @@ import java.util.Optional;
 public class PaymentService {
     private final PaymentRepository repository;
     private final UserRepository userRepository;
-    private static final String NO_PAYMENT = "No payments were found with: ";
+    private static final String NO_PAYMENT = "No payments were found with ID: ";
     private static final String NO_USER_USERNAME = "No user found with Username: ";
-    private static final String USER = "User-Agent";
+    private static final String USER = "User-Agent"; // Verifique se este é o cabeçalho correto
 
-    public List<PaymentResponseDto> findAll(HttpServletResponse response){
+    public List<PaymentResponseDto> findAll(HttpServletRequest request) {
         log.info("Listing payments.");
-        return repository.findAllByUser(findUser(response)).stream().map(Mapper::toDto).toList();
+        return repository.findAllByUser(findUser(request)).stream().map(Mapper::toDto).toList();
     }
 
-    public PaymentResponseDto findById(Long id, HttpServletResponse response){
+    public PaymentResponseDto findById(Long id, HttpServletRequest request) {
         log.info("Seeking payment with ID: {}", id);
-        return repository.findByIdPaymentAndUser(id, findUser(response)).map(Mapper::toDto).orElseThrow(() -> new ResourceNotFoundException(NO_PAYMENT + id));
+        return repository.findByIdPaymentAndUser(id, findUser(request))
+                .map(Mapper::toDto)
+                .orElseThrow(() -> new ResourceNotFoundException(NO_PAYMENT + id));
     }
 
-    public PaymentResponseDto create(PaymentRequestDto paymentRequestDto, HttpServletResponse response){
+    public PaymentResponseDto create(PaymentRequestDto paymentRequestDto, HttpServletRequest request) {
         Payment payment = new Payment();
         payment.setPaymentDate(paymentRequestDto.paymentDate());
         payment.setDescription(paymentRequestDto.description());
@@ -45,14 +47,14 @@ public class PaymentService {
         payment.setValue(paymentRequestDto.value());
         payment.setStatus(paymentRequestDto.status());
         payment.setPaymentMethod(paymentRequestDto.paymentMethod());
-        payment.setUser(findUser(response));
+        payment.setUser(findUser(request));
         log.info("Creating new payment: {}", paymentRequestDto.description());
 
         return Mapper.toDto(repository.save(payment));
     }
 
-    public PaymentResponseDto update(Long id, PaymentRequestDto paymentRequestDto, HttpServletResponse response){
-        Payment payment = repository.findByIdPaymentAndUser(id, findUser(response)).map(data -> {
+    public PaymentResponseDto update(Long id, PaymentRequestDto paymentRequestDto, HttpServletRequest request) {
+        Payment payment = repository.findByIdPaymentAndUser(id, findUser(request)).map(data -> {
             data.setStatus(paymentRequestDto.status());
             data.setPaymentDate(paymentRequestDto.paymentDate());
             data.setDescription(paymentRequestDto.description());
@@ -65,24 +67,31 @@ public class PaymentService {
         return Mapper.toDto(payment);
     }
 
-    public void delete(Long id, HttpServletResponse response) {
-        validateDelete(id, findUser(response));
+    public void delete(Long id, HttpServletRequest request) {
+        validateDelete(id, findUser(request));
         log.info("Deleting payment with ID: {}", id);
         repository.deleteById(id);
     }
 
-    public List<PaymentResponseDto> findPaymentsByPeriod(LocalDate initialDate, LocalDate finalDate, HttpServletResponse response){
-        List<Payment> payments = repository.findByPaymentDateBetweenAndUser(initialDate, finalDate, findUser(response));
-        log.info("Seeking payments for the period {} to {}", initialDate,  finalDate);
+    public List<PaymentResponseDto> findPaymentsByPeriod(LocalDate initialDate, LocalDate finalDate, HttpServletRequest request) {
+        List<Payment> payments = repository.findByPaymentDateBetweenAndUser(initialDate, finalDate, findUser(request));
+        log.info("Seeking payments for the period {} to {}", initialDate, finalDate);
         return payments.stream().map(Mapper::toDto).toList();
     }
 
-    private User findUser(HttpServletResponse response){
-        return userRepository.findByUsername(response.getHeader(USER)).orElseThrow(() -> new ResourceNotFoundException(NO_USER_USERNAME));
+    private User findUser(HttpServletRequest request) {
+        String username = request.getHeader(USER);
+        if (username == null) {
+            throw new ResourceNotFoundException("User-Agent header is missing");
+        }
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new ResourceNotFoundException(NO_USER_USERNAME + username));
     }
 
-    private void validateDelete(Long id, User user){
+    private void validateDelete(Long id, User user) {
         Optional<Payment> payment = repository.findByIdPaymentAndUser(id, user);
-        if (payment.isEmpty()) throw new ResourceNotFoundException(NO_PAYMENT + id);
+        if (payment.isEmpty()) {
+            throw new ResourceNotFoundException(NO_PAYMENT + id);
+        }
     }
 }

@@ -5,7 +5,7 @@ import br.janioofi.financialcontrol.domain.dtos.PaymentResponseDto;
 import br.janioofi.financialcontrol.domain.services.PaymentService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -25,7 +25,7 @@ public class PaymentController {
 
     @GetMapping
     @Operation(summary = "Search all payments in the system")
-    public ResponseEntity<List<PaymentResponseDto>> findAll(HttpServletResponse response){
+    public ResponseEntity<List<PaymentResponseDto>> findAll(HttpServletRequest response){
         return ResponseEntity.ok().body(service.findAll(response));
     }
 
@@ -33,7 +33,7 @@ public class PaymentController {
     @Operation(summary = "Search payments by id")
     public ResponseEntity<PaymentResponseDto> findById(
             @PathVariable Long id,
-            HttpServletResponse response){
+            HttpServletRequest response){
         return ResponseEntity.ok().body(service.findById(id, response));
     }
 
@@ -41,7 +41,7 @@ public class PaymentController {
     @Operation(summary = "Create a new payment")
     public ResponseEntity<PaymentResponseDto> create(
             @RequestBody PaymentRequestDto paymentRequestDto,
-            HttpServletResponse response){
+            HttpServletRequest response){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.create(paymentRequestDto, response));
     }
 
@@ -49,7 +49,7 @@ public class PaymentController {
     @Operation(summary = "Delete a payment")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            HttpServletResponse response){
+            HttpServletRequest response){
         service.delete(id, response);
         return ResponseEntity.ok().build();
     }
@@ -59,7 +59,7 @@ public class PaymentController {
     public ResponseEntity<PaymentResponseDto> update(
             @RequestBody PaymentRequestDto paymentRequestDto,
             @PathVariable Long id,
-            HttpServletResponse response){
+            HttpServletRequest response){
         return ResponseEntity.ok().body(service.update(id, paymentRequestDto, response));
     }
 
@@ -68,7 +68,7 @@ public class PaymentController {
     public ResponseEntity<List<PaymentResponseDto>> findPaymentsByPeriod(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate initialDate,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate finalDate,
-            HttpServletResponse response){
-        return ResponseEntity.ok().body(service.findPaymentsByPeriod(initialDate, finalDate, response));
+            HttpServletRequest request){
+        return ResponseEntity.ok().body(service.findPaymentsByPeriod(initialDate, finalDate, request));
     }
 }

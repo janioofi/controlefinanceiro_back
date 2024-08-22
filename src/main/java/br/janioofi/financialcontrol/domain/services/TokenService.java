@@ -1,14 +1,15 @@
 package br.janioofi.financialcontrol.domain.services;
 
 import br.janioofi.financialcontrol.domain.entities.User;
-import com.auth0.jwt.algorithms.Algorithm;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import br.janioofi.financialcontrol.domain.util.TokenUtil;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import java.time.*;
+import java.time.ZoneId;
 
 @Service
 public class TokenService {
@@ -16,20 +17,20 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user){
-        try{
+    public String generateToken(User user) {
+        try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.create()
                     .withIssuer("api")
                     .withSubject(user.getUsername())
-                    .withExpiresAt(generateExpirationDateToken())
+                    .withExpiresAt(TokenUtil.generateExpirationDateToken(2, ZoneId.of("America/Sao_Paulo")))
                     .sign(algorithm);
-        }catch (JWTCreationException e){
+        } catch (JWTCreationException e) {
             return e.getMessage();
         }
     }
 
-    public String validateToken(String token){
+    public String validateToken(String token) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             return JWT.require(algorithm)
@@ -37,14 +38,8 @@ public class TokenService {
                     .build()
                     .verify(token)
                     .getSubject();
-        }catch (JWTVerificationException e){
+        } catch (JWTVerificationException e) {
             return "";
         }
-    }
-
-    private Instant generateExpirationDateToken(){
-        long timeLogged = 2;
-        ZoneId zoneId = ZoneId.of("America/Sao_Paulo");
-        return LocalDateTime.now().plusDays(timeLogged).atZone(zoneId).toInstant();
     }
 }

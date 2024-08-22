@@ -2,16 +2,16 @@ spring:
   application:
     name: financial-control
   datasource:
-    url: jdbc:postgresql://localhost:5432/financial_control
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
     driver-class-name: org.postgresql.Driver
-    username: root
-    password: 12345678
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
   jpa:
     hibernate:
       ddl-auto: update
 api:
   security:
     token:
-      secret: 12312312312u90d889012839082901hd901283190288312
+      secret: ${SECRET}
 server:
   port: 8080
