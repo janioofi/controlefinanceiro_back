@@ -5,7 +5,7 @@ import br.janioofi.financialcontrol.domain.dtos.UserResponseDto;
 import br.janioofi.financialcontrol.domain.services.UserService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,8 +24,8 @@ public class UserController {
     @Operation(summary = "Deletes a user from the system")
     public ResponseEntity<Void> delete(
             @PathVariable Long id,
-            HttpServletRequest request){
-        service.delete(id, request);
+            HttpServletResponse response){
+        service.delete(id, response);
         return ResponseEntity.ok().build();
     }
 
@@ -34,23 +34,23 @@ public class UserController {
     public ResponseEntity<UserResponseDto> update(
             @RequestBody UserRegisterDto userRegisterDto,
             @PathVariable Long id,
-            HttpServletRequest request){
-        return ResponseEntity.ok().body(service.update(id, userRegisterDto, request));
+            HttpServletResponse response){
+        return ResponseEntity.ok().body(service.update(id, userRegisterDto, response));
     }
 
     @GetMapping(ID)
     @Operation(summary = "Search user by id")
     public ResponseEntity<UserResponseDto> findById(
             @PathVariable Long id,
-            HttpServletRequest request){
-        return ResponseEntity.ok().body(service.findById(id, request));
+            HttpServletResponse response){
+        return ResponseEntity.ok().body(service.findById(id, response));
     }
 
     @GetMapping(USERNAME)
     @Operation(summary = "Search user by username")
     public ResponseEntity<UserResponseDto> findByUsername(
             @PathVariable String username,
-            HttpServletRequest request){
-        return ResponseEntity.ok().body(service.findByUsername(username, request));
+            HttpServletResponse response){
+        return ResponseEntity.ok().body(service.findByUsername(username, response));
     }
 }

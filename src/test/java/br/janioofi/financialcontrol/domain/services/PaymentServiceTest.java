@@ -9,7 +9,7 @@ import br.janioofi.financialcontrol.domain.enums.PaymentMethod;
 import br.janioofi.financialcontrol.domain.enums.Status;
 import br.janioofi.financialcontrol.domain.repositories.PaymentRepository;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -37,9 +37,9 @@ class PaymentServiceTest {
     private PaymentService paymentService;
 
     @Mock
-    private HttpServletRequest request;
+    private HttpServletResponse response;
 
-    private static final String USER_AGENT = "User-Agent";
+    private static final String USER_AGENT = "X-User-Agent";
     private static final String USERNAME = "username";
 
     private User mockUser(Long userId) {
@@ -69,11 +69,11 @@ class PaymentServiceTest {
         Payment payment = mockPayment(user, 1L);
         List<Payment> payments = List.of(payment);
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(paymentRepository.findAllByUser(user)).thenReturn(payments);
 
-        List<PaymentResponseDto> responseDtos = paymentService.findAll(request);
+        List<PaymentResponseDto> responseDtos = paymentService.findAll(response);
 
         assertEquals(1, responseDtos.size());
         assertNotNull(responseDtos.get(0));
@@ -85,11 +85,11 @@ class PaymentServiceTest {
         User user = mockUser(1L);
         Payment payment = mockPayment(user, 1L);
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(paymentRepository.findByIdPaymentAndUser(payment.getIdPayment(), user)).thenReturn(Optional.of(payment));
 
-        PaymentResponseDto responseDto = paymentService.findById(payment.getIdPayment(), request);
+        PaymentResponseDto responseDto = paymentService.findById(payment.getIdPayment(), response);
 
         assertNotNull(responseDto);
         assertEquals(payment.getIdPayment(), responseDto.idPayment());
@@ -108,7 +108,7 @@ class PaymentServiceTest {
                 PaymentMethod.MONEY
         );
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
 
         Payment payment = new Payment();
@@ -122,7 +122,7 @@ class PaymentServiceTest {
 
         when(paymentRepository.save(any(Payment.class))).thenReturn(payment);
 
-        PaymentResponseDto responseDto = paymentService.create(requestDto, request);
+        PaymentResponseDto responseDto = paymentService.create(requestDto, response);
 
         assertNotNull(responseDto);
         assertEquals(requestDto.description(), responseDto.description());
@@ -143,7 +143,7 @@ class PaymentServiceTest {
                 PaymentMethod.MONEY
         );
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(paymentRepository.findByIdPaymentAndUser(existingPayment.getIdPayment(), user)).thenReturn(Optional.of(existingPayment));
 
@@ -159,7 +159,7 @@ class PaymentServiceTest {
 
         when(paymentRepository.save(any(Payment.class))).thenReturn(updatedPayment);
 
-        PaymentResponseDto responseDto = paymentService.update(existingPayment.getIdPayment(), requestDto, request);
+        PaymentResponseDto responseDto = paymentService.update(existingPayment.getIdPayment(), requestDto, response);
 
         assertNotNull(responseDto);
         assertEquals(requestDto.description(), responseDto.description());
@@ -171,13 +171,13 @@ class PaymentServiceTest {
         User user = mockUser(1L);
         Payment payment = mockPayment(user, 1L);
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(paymentRepository.findByIdPaymentAndUser(payment.getIdPayment(), user)).thenReturn(Optional.of(payment));
 
         doNothing().when(paymentRepository).deleteById(payment.getIdPayment());
 
-        paymentService.delete(payment.getIdPayment(), request);
+        paymentService.delete(payment.getIdPayment(), response);
 
         verify(paymentRepository).deleteById(payment.getIdPayment());
     }
@@ -190,11 +190,11 @@ class PaymentServiceTest {
         Payment payment = mockPayment(user, 1L);
         List<Payment> payments = List.of(payment);
 
-        when(request.getHeader(USER_AGENT)).thenReturn(USERNAME);
+        when(response.getHeader(USER_AGENT)).thenReturn(USERNAME);
         when(userRepository.findByUsername(USERNAME)).thenReturn(Optional.of(user));
         when(paymentRepository.findByPaymentDateBetweenAndUser(startDate, endDate, user)).thenReturn(payments);
 
-        List<PaymentResponseDto> responseDtos = paymentService.findPaymentsByPeriod(startDate, endDate, request);
+        List<PaymentResponseDto> responseDtos = paymentService.findPaymentsByPeriod(startDate, endDate, response);
 
         assertEquals(1, responseDtos.size());
         assertNotNull(responseDtos.get(0));

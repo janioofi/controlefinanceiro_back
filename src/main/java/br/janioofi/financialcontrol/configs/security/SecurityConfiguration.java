@@ -62,7 +62,7 @@ public class SecurityConfiguration implements WebMvcConfigurer {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
         corsConfiguration.setAllowedOrigins(List.of("http://localhost:4200"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        corsConfiguration.setAllowedHeaders(List.of("Content-Type", "Authorization", "Access-Control-Allow-Origin", "User-Agent"));
+        corsConfiguration.setAllowedHeaders(List.of("Content-Type", "Authorization", "Access-Control-Allow-Origin", "User-Agent", "X-User-Agent"));
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/api/**", corsConfiguration);
         return source;

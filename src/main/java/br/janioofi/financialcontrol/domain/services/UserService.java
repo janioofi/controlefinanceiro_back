@@ -6,7 +6,7 @@ import br.janioofi.financialcontrol.domain.dtos.UserResponseDto;
 import br.janioofi.financialcontrol.domain.entities.User;
 import br.janioofi.financialcontrol.domain.exceptions.ResourceNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -23,10 +23,10 @@ public class UserService {
     private static final String NO_USER_ID = "No user found with ID: ";
     private static final String NO_USER_USERNAME = "Nenhum usuário registrado com o username: ";
     private static final String WRONG_USER = "Only the user can perform this action";
-    private static final String USER_AGENT = "User-Agent";
+    private static final String USER_AGENT = "X-User-Agent";
 
-    public UserResponseDto update(Long id, UserRegisterDto userRegisterDto, HttpServletRequest request) {
-        validateUserById(request, id); // Verifica o cabeçalho e o usuário
+    public UserResponseDto update(Long id, UserRegisterDto userRegisterDto, HttpServletResponse response) {
+        validateUserById(response, id); // Verifica o cabeçalho e o usuário
         validateUpdate(userRegisterDto, id); // Verifica se o username já existe e se é o mesmo
         validatePassword(userRegisterDto); // Verifica se as senhas são iguais
         User user = repository.findById(id)
@@ -38,20 +38,20 @@ public class UserService {
         return Mapper.toDto(user);
     }
 
-    public UserResponseDto findById(Long id, HttpServletRequest request){
-        validateUserById(request, id);
+    public UserResponseDto findById(Long id, HttpServletResponse response){
+        validateUserById(response, id);
         log.info("Seeking user with ID: {}", id);
         return repository.findById(id).map(Mapper::toDto).orElseThrow(() -> new ResourceNotFoundException(NO_USER_ID + id));
     }
 
-    public UserResponseDto findByUsername(String username, HttpServletRequest request){
-        validateUserByUsername(request, username);
+    public UserResponseDto findByUsername(String username, HttpServletResponse response){
+        validateUserByUsername(response, username);
         log.info("Seeking user with Username: {}", username);
         return repository.findByUsername(username).map(Mapper::toDto).orElseThrow(() -> new ResourceNotFoundException(NO_USER_USERNAME + username));
     }
 
-    public void delete(Long id, HttpServletRequest request){
-        validateUserById(request, id);
+    public void delete(Long id, HttpServletResponse response){
+        validateUserById(response, id);
         validateDelete(id);
         log.info("Deleting user with ID: {}", id);
         repository.deleteById(id);
@@ -76,13 +76,13 @@ public class UserService {
         }
     }
 
-    private void validateUserById(HttpServletRequest request, Long id) {
-        String usernameFromHeader = request.getHeader(USER_AGENT);
+    private void validateUserById(HttpServletResponse response, Long id) {
+        String usernameFromHeader = response.getHeader(USER_AGENT);
         validateUserFromHeader(usernameFromHeader, id);
     }
 
-    private void validateUserByUsername(HttpServletRequest request, String username) {
-        String usernameFromHeader = request.getHeader(USER_AGENT);
+    private void validateUserByUsername(HttpServletResponse response, String username) {
+        String usernameFromHeader = response.getHeader(USER_AGENT);
         validateUserFromHeader(usernameFromHeader, username);
     }
 

@@ -6,7 +6,7 @@ import br.janioofi.financialcontrol.domain.enums.Category;
 import br.janioofi.financialcontrol.domain.enums.PaymentMethod;
 import br.janioofi.financialcontrol.domain.enums.Status;
 import br.janioofi.financialcontrol.domain.services.PaymentService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -44,7 +44,7 @@ class PaymentControllerTest {
     private PaymentService paymentService;
 
     @Mock
-    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     private PaymentRequestDto paymentRequestDto;
     private PaymentResponseDto paymentResponseDto;
@@ -60,67 +60,67 @@ class PaymentControllerTest {
     void testFindAll() {
         when(paymentService.findAll(any())).thenReturn(Arrays.asList(paymentResponseDto));
 
-        ResponseEntity<List<PaymentResponseDto>> response = paymentController.findAll(this.request);
+        ResponseEntity<List<PaymentResponseDto>> response = paymentController.findAll(this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
-        verify(paymentService, times(1)).findAll(any(HttpServletRequest.class));
+        verify(paymentService, times(1)).findAll(any(HttpServletResponse.class));
     }
 
     @Test
     void testFindById() {
-        when(paymentService.findById(anyLong(), any(HttpServletRequest.class))).thenReturn(paymentResponseDto);
+        when(paymentService.findById(anyLong(), any(HttpServletResponse.class))).thenReturn(paymentResponseDto);
 
-        ResponseEntity<PaymentResponseDto> response = paymentController.findById(1L, this.request);
+        ResponseEntity<PaymentResponseDto> response = paymentController.findById(1L, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(paymentResponseDto, response.getBody());
-        verify(paymentService, times(1)).findById(anyLong(), any(HttpServletRequest.class));
+        verify(paymentService, times(1)).findById(anyLong(), any(HttpServletResponse.class));
     }
 
     @Test
     void testCreate() {
-        when(paymentService.create(any(PaymentRequestDto.class), any(HttpServletRequest.class))).thenReturn(paymentResponseDto);
+        when(paymentService.create(any(PaymentRequestDto.class), any(HttpServletResponse.class))).thenReturn(paymentResponseDto);
 
-        ResponseEntity<PaymentResponseDto> response = paymentController.create(paymentRequestDto, this.request);
+        ResponseEntity<PaymentResponseDto> response = paymentController.create(paymentRequestDto, this.response);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         assertEquals(paymentResponseDto, response.getBody());
-        verify(paymentService, times(1)).create(any(PaymentRequestDto.class), any(HttpServletRequest.class));
+        verify(paymentService, times(1)).create(any(PaymentRequestDto.class), any(HttpServletResponse.class));
     }
 
     @Test
     void testDelete() {
-        doNothing().when(paymentService).delete(anyLong(), any(HttpServletRequest.class));
+        doNothing().when(paymentService).delete(anyLong(), any(HttpServletResponse.class));
 
-        ResponseEntity<Void> response = paymentController.delete(1L, this.request);
+        ResponseEntity<Void> response = paymentController.delete(1L, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(paymentService, times(1)).delete(anyLong(), any(HttpServletRequest.class));
+        verify(paymentService, times(1)).delete(anyLong(), any(HttpServletResponse.class));
     }
 
     @Test
     void testUpdate() {
-        when(paymentService.update(anyLong(), any(PaymentRequestDto.class), any(HttpServletRequest.class))).thenReturn(paymentResponseDto);
+        when(paymentService.update(anyLong(), any(PaymentRequestDto.class), any(HttpServletResponse.class))).thenReturn(paymentResponseDto);
 
-        ResponseEntity<PaymentResponseDto> response = paymentController.update( paymentRequestDto, 1L, this.request);
+        ResponseEntity<PaymentResponseDto> response = paymentController.update( paymentRequestDto, 1L, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(paymentResponseDto, response.getBody());
-        verify(paymentService, times(1)).update(anyLong(), any(PaymentRequestDto.class), any(HttpServletRequest.class));
+        verify(paymentService, times(1)).update(anyLong(), any(PaymentRequestDto.class), any(HttpServletResponse.class));
     }
 
     @Test
     void testFindPaymentsByPeriod() {
-        when(paymentService.findPaymentsByPeriod(any(LocalDate.class), any(LocalDate.class), any(HttpServletRequest.class)))
+        when(paymentService.findPaymentsByPeriod(any(LocalDate.class), any(LocalDate.class), any(HttpServletResponse.class)))
                 .thenReturn(Arrays.asList(paymentResponseDto));
 
         ResponseEntity<List<PaymentResponseDto>> response = paymentController.findPaymentsByPeriod(
-                LocalDate.now().minusDays(1), LocalDate.now(), this.request);
+                LocalDate.now().minusDays(1), LocalDate.now(), this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(1, response.getBody().size());
-        verify(paymentService, times(1)).findPaymentsByPeriod(any(LocalDate.class), any(LocalDate.class), any(HttpServletRequest.class));
+        verify(paymentService, times(1)).findPaymentsByPeriod(any(LocalDate.class), any(LocalDate.class), any(HttpServletResponse.class));
     }
 
     private void startTarefa() {

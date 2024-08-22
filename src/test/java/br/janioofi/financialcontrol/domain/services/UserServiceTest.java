@@ -5,7 +5,7 @@ import br.janioofi.financialcontrol.domain.dtos.UserResponseDto;
 import br.janioofi.financialcontrol.domain.entities.User;
 import br.janioofi.financialcontrol.domain.exceptions.ResourceNotFoundException;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -30,7 +30,7 @@ class UserServiceTest {
     private UserRepository userRepository;
 
     @Mock
-    private HttpServletRequest request;
+    private HttpServletResponse response;
 
     @BeforeEach
     public void setUp() {
@@ -43,12 +43,12 @@ class UserServiceTest {
         User existingUser = new User(1L, "username", new BCryptPasswordEncoder().encode("oldPassword"));
         User updatedUser = new User(1L, "username", new BCryptPasswordEncoder().encode("password"));
 
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findById(1L)).thenReturn(Optional.of(existingUser));
         when(userRepository.findByUsername("username")).thenReturn(Optional.of(existingUser));
         when(userRepository.save(any(User.class))).thenReturn(updatedUser);
 
-        UserResponseDto result = userService.update(1L, dto, request);
+        UserResponseDto result = userService.update(1L, dto, response);
 
         assertNotNull(result);
         assertEquals("username", result.username());
@@ -59,10 +59,10 @@ class UserServiceTest {
     void testUpdateUser_UserNotFound() {
         UserRegisterDto dto = new UserRegisterDto("username", "password", "password");
 
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.update(1L, dto, request));
+        assertThrows(ResourceNotFoundException.class, () -> userService.update(1L, dto, response));
     }
 
     @Test
@@ -71,14 +71,14 @@ class UserServiceTest {
         User user = new User(1L, "username", "password");
 
         // Mockar o retorno do cabeçalho do HttpServletResponse
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
 
         // Mockar o retorno dos métodos do UserRepository
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
 
         // Executar o método findById
-        UserResponseDto result = userService.findById(1L, request);
+        UserResponseDto result = userService.findById(1L, response);
 
         // Verificar os resultados
         assertNotNull(result);
@@ -87,19 +87,19 @@ class UserServiceTest {
 
     @Test
     void testFindById_UserNotFound() {
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.findById(1L, request));
+        assertThrows(ResourceNotFoundException.class, () -> userService.findById(1L, response));
     }
 
     @Test
     void testFindByUsername_Success() {
         User user = new User(1L, "username", "password");
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findByUsername("username")).thenReturn(Optional.of(user));
 
-        UserResponseDto result = userService.findByUsername("username", request);
+        UserResponseDto result = userService.findByUsername("username", response);
 
         assertNotNull(result);
         assertEquals("username", result.username());
@@ -107,10 +107,10 @@ class UserServiceTest {
 
     @Test
     void testFindByUsername_UserNotFound() {
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findByUsername("username")).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.findByUsername("username", request));
+        assertThrows(ResourceNotFoundException.class, () -> userService.findByUsername("username", response));
     }
 
     @Test
@@ -120,30 +120,30 @@ class UserServiceTest {
 
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
         doNothing().when(userRepository).deleteById(userId);
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findByUsername("username")).thenReturn(Optional.of(existingUser));
-        userService.delete(userId, request);
+        userService.delete(userId, response);
         verify(userRepository).deleteById(userId);
     }
 
 
     @Test
     void testDeleteUser_UserNotFound() {
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class, () -> userService.delete(1L, request));
+        assertThrows(ResourceNotFoundException.class, () -> userService.delete(1L, response));
     }
 
     @Test
     void testValidatePassword_PasswordMismatch() {
         UserRegisterDto dto = new UserRegisterDto("username", "password", "differentPassword");
 
-        when(request.getHeader("User-Agent")).thenReturn("username");
+        when(response.getHeader("X-User-Agent")).thenReturn("username");
         when(userRepository.findById(1L)).thenReturn(Optional.of(new User(1L, "username", "oldPassword")));
         when(userRepository.findByUsername("username")).thenReturn(Optional.of(new User(1L, "username", "oldPassword")));
 
-        assertThrows(DataIntegrityViolationException.class, () -> userService.update(1L, dto, request));
+        assertThrows(DataIntegrityViolationException.class, () -> userService.update(1L, dto, response));
     }
 
     @Test
@@ -157,8 +157,8 @@ class UserServiceTest {
         existingUser.setPassword("oldPassword");
 
         // Mock do HttpServletRequest
-        HttpServletRequest request = mock(HttpServletRequest.class);
-        when(request.getHeader("User-Agent")).thenReturn(username);
+        HttpServletResponse response = mock(HttpServletResponse.class);
+        when(response.getHeader("X-User-Agent")).thenReturn(username);
 
         // Mock do UserRepository
         when(userRepository.findById(userId)).thenReturn(Optional.of(existingUser));
@@ -166,7 +166,7 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(existingUser);
 
         // Verifique se o método update não lança exceção
-        assertDoesNotThrow(() -> userService.update(userId, dto, request));
+        assertDoesNotThrow(() -> userService.update(userId, dto, response));
     }
 
 }

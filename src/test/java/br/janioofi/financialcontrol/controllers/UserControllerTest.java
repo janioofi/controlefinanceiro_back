@@ -3,7 +3,7 @@ package br.janioofi.financialcontrol.controllers;
 import br.janioofi.financialcontrol.domain.dtos.UserRegisterDto;
 import br.janioofi.financialcontrol.domain.dtos.UserResponseDto;
 import br.janioofi.financialcontrol.domain.services.UserService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -33,7 +33,7 @@ class UserControllerTest {
     private UserService userService;
 
     @Mock
-    private HttpServletRequest response;
+    private HttpServletResponse response;
 
     private UserRegisterDto userRegisterDto;
     private UserResponseDto userResponseDto;
@@ -47,46 +47,46 @@ class UserControllerTest {
 
     @Test
     void testDelete() {
-        doNothing().when(userService).delete(anyLong(), any(HttpServletRequest.class));
+        doNothing().when(userService).delete(anyLong(), any(HttpServletResponse.class));
 
         ResponseEntity<Void> response = userController.delete(ID, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        verify(userService, times(1)).delete(anyLong(), any(HttpServletRequest.class));
+        verify(userService, times(1)).delete(anyLong(), any(HttpServletResponse.class));
     }
 
     @Test
     void testUpdate() {
-        when(userService.update(anyLong(), any(UserRegisterDto.class), any(HttpServletRequest.class)))
+        when(userService.update(anyLong(), any(UserRegisterDto.class), any(HttpServletResponse.class)))
                 .thenReturn(userResponseDto);
 
         ResponseEntity<UserResponseDto> response = userController.update(userRegisterDto, ID, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userResponseDto, response.getBody());
-        verify(userService, times(1)).update(anyLong(), any(UserRegisterDto.class), any(HttpServletRequest.class));
+        verify(userService, times(1)).update(anyLong(), any(UserRegisterDto.class), any(HttpServletResponse.class));
     }
 
     @Test
     void testFindById() {
-        when(userService.findById(anyLong(), any(HttpServletRequest.class))).thenReturn(userResponseDto);
+        when(userService.findById(anyLong(), any(HttpServletResponse.class))).thenReturn(userResponseDto);
 
         ResponseEntity<UserResponseDto> response = userController.findById(ID, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userResponseDto, response.getBody());
-        verify(userService, times(1)).findById(anyLong(), any(HttpServletRequest.class));
+        verify(userService, times(1)).findById(anyLong(), any(HttpServletResponse.class));
     }
 
     @Test
     void testFindByUsername() {
-        when(userService.findByUsername(anyString(), any(HttpServletRequest.class))).thenReturn(userResponseDto);
+        when(userService.findByUsername(anyString(), any(HttpServletResponse.class))).thenReturn(userResponseDto);
 
         ResponseEntity<UserResponseDto> response = userController.findByUsername(USERNAME, this.response);
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(userResponseDto, response.getBody());
-        verify(userService, times(1)).findByUsername(anyString(), any(HttpServletRequest.class));
+        verify(userService, times(1)).findByUsername(anyString(), any(HttpServletResponse.class));
     }
 
     private void startUser() {
