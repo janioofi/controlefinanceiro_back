@@ -1,7 +1,8 @@
 package br.janioofi.financialcontrol.controllers;
 
 import br.janioofi.financialcontrol.domain.dtos.LoginResponseDto;
-import br.janioofi.financialcontrol.domain.dtos.UserRequestDto;
+import br.janioofi.financialcontrol.domain.dtos.UserLoginDto;
+import br.janioofi.financialcontrol.domain.dtos.UserRegisterDto;
 import br.janioofi.financialcontrol.domain.services.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -23,7 +24,7 @@ public class AuthenticationController {
 
     @PostMapping("/login")
     @Operation(summary = "Log in to the system")
-    public ResponseEntity<LoginResponseDto> login(@RequestBody UserRequestDto user, HttpServletResponse res){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody UserLoginDto user, HttpServletResponse res){
         LoginResponseDto response = service.login(user);
         res.addHeader("Authorization", "Bearer " + response.token());
         return ResponseEntity.ok().body(response);
@@ -31,7 +32,7 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     @Operation(summary = "Register in the system")
-    public ResponseEntity<String> register(@RequestBody UserRequestDto user){
+    public ResponseEntity<String> register(@RequestBody UserRegisterDto user){
         return ResponseEntity.status(HttpStatus.CREATED).body(service.register(user));
     }
 }

@@ -3,8 +3,6 @@ package br.janioofi.financialcontrol.domain.repositories;
 import br.janioofi.financialcontrol.domain.entities.Payment;
 import br.janioofi.financialcontrol.domain.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;

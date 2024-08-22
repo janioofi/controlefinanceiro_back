@@ -1,7 +1,6 @@
 package br.janioofi.financialcontrol.domain.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -25,20 +24,19 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idUser;
 
-    @Email
-    @NotBlank(message = "E-mail é obrigatório")
+    @NotBlank(message = "Usuário é obrigatório")
     @Column(unique = true, nullable = false)
-    private String email;
+    private String username;
 
     @Column(nullable = false)
     @NotBlank(message = "Senha é obrigatória")
     private String password;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Payment> payments;
+    private transient Set<Payment> payments;
 
-    public User(Long idUser, String email, String password) {
-        this.email = email;
+    public User(Long idUser, String username, String password) {
+        this.username = username;
         this.idUser = idUser;
         this.password = password;
     }
@@ -55,7 +53,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.username;
     }
 
     @Override

@@ -19,14 +19,14 @@ public class Mapper {
                 payment.getCategory().getDescription(),
                 payment.getStatus().getDescription(),
                 payment.getPaymentMethod().getDescription(),
-                payment.getUser().getEmail());
+                payment.getUser().getUsername());
     }
 
     public static UserResponseDto toDto(User user){
         if (user == null) {
             throw new ResourceNotFoundException("User not found");
         }
-        return new UserResponseDto(user.getIdUser(), user.getEmail(), user.getPassword());
+        return new UserResponseDto(user.getIdUser(), user.getUsername());
     }
 
 

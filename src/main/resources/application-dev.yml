@@ -1,5 +1,18 @@
 spring:
   application:
     name: financial-control
+  datasource:
+    url: jdbc:postgresql://${PGHOST}:${PGPORT}/${PGDATABASE}
+    driver-class-name: org.postgresql.Driver
+    username: ${PGUSER}
+    password: ${PGPASSWORD}
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+api:
+  security:
+    token:
+      secret: ${SECRET}
 server:
   port: 8080

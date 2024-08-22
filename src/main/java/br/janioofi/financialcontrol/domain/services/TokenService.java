@@ -43,8 +43,8 @@ public class TokenService {
     }
 
     private Instant generateExpirationDateToken(){
-        int timeLogged = 8;
+        long timeLogged = 2;
         ZoneId zoneId = ZoneId.of("America/Sao_Paulo");
-        return LocalDateTime.now().plusHours(timeLogged).atZone(zoneId).toInstant();
+        return LocalDateTime.now().plusDays(timeLogged).atZone(zoneId).toInstant();
     }
 }

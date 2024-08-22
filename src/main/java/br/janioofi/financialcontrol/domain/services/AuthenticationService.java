@@ -1,7 +1,8 @@
 package br.janioofi.financialcontrol.domain.services;
 
 import br.janioofi.financialcontrol.domain.dtos.LoginResponseDto;
-import br.janioofi.financialcontrol.domain.dtos.UserRequestDto;
+import br.janioofi.financialcontrol.domain.dtos.UserLoginDto;
+import br.janioofi.financialcontrol.domain.dtos.UserRegisterDto;
 import br.janioofi.financialcontrol.domain.entities.User;
 import br.janioofi.financialcontrol.domain.repositories.UserRepository;
 import jakarta.validation.Valid;
@@ -22,31 +23,44 @@ public class AuthenticationService {
     private final UserRepository repository;
     private final TokenService tokenService;
 
-    public LoginResponseDto login(@Valid UserRequestDto user){
-        validaRegistro(user);
-        var usuarioSenha = new UsernamePasswordAuthenticationToken(user.email(), user.password());
+    public LoginResponseDto login(@Valid UserLoginDto user){
+        validateLogin(user);
+        var usuarioSenha = new UsernamePasswordAuthenticationToken(user.username(), user.password());
         var auth = authenticationManager.authenticate(usuarioSenha);
         var token = tokenService.generateToken((User) auth.getPrincipal());
 
-        log.info("{} Logging in", user.email());
+        log.info("{} Logging in", user.username());
         return new LoginResponseDto(token);
     }
 
-    public String register(@Valid UserRequestDto user){
-        validaRegistro(user);
-        if(this.repository.findByEmail(user.email()) != null){
-            throw new DataIntegrityViolationException("There is already a registered user with the same name");
-        }
+    public String register(@Valid UserRegisterDto user){
+        validatePassword(user);
+        validateRegister(user);
         String encryptedPassword = new BCryptPasswordEncoder().encode(user.password());
-        User data = new User(null, user.email(), encryptedPassword);
+        User data = new User(null, user.username(), encryptedPassword);
         repository.save(data);
-        log.info("{} registered", user.email());
-        return "User registered successfully";
+        log.info("{} registered", user.username());
+        return "Usuário registrado com sucesso";
     }
 
-    private void validaRegistro(UserRequestDto user){
-        if(user.email().isEmpty() ||  user.password().isEmpty()){
-            throw new DataIntegrityViolationException("All fields need to be filled in\n");
+    private void validatePassword(UserRegisterDto user){
+        if(!user.password().equals(user.confirmPassword())){
+            throw new DataIntegrityViolationException("As senhas precisam ser iguais!");
+        }
+    }
+
+    private void validateRegister(UserRegisterDto user){
+        if(this.repository.findByUsername(user.username()).isPresent()){
+            throw new DataIntegrityViolationException("Já existe um usuário cadastrado com o mesmo username");
+        }
+        if(user.username().isEmpty() ||  user.password().isEmpty() || user.confirmPassword().isEmpty()){
+            throw new DataIntegrityViolationException("Todos os campos precisam ser preenchidos");
+        }
+    }
+
+    private void validateLogin(UserLoginDto user){
+        if(user.username().isEmpty() ||  user.password().isEmpty()){
+            throw new DataIntegrityViolationException("Todos os campos precisam ser preenchidos");
         }
     }
 }

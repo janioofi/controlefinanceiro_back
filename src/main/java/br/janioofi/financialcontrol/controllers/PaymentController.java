@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -65,8 +66,8 @@ public class PaymentController {
     @GetMapping("/period")
     @Operation(summary = "Searches for payments for a specified period")
     public ResponseEntity<List<PaymentResponseDto>> findPaymentsByPeriod(
-            @RequestParam LocalDate initialDate,
-            @RequestParam LocalDate finalDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate initialDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)LocalDate finalDate,
             HttpServletResponse response){
         return ResponseEntity.ok().body(service.findPaymentsByPeriod(initialDate, finalDate, response));
     }

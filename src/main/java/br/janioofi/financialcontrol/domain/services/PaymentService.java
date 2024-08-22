@@ -24,6 +24,8 @@ public class PaymentService {
     private final PaymentRepository repository;
     private final UserRepository userRepository;
     private static final String NO_PAYMENT = "No payments were found with: ";
+    private static final String NO_USER_USERNAME = "No user found with Username: ";
+    private static final String USER = "User-Agent";
 
     public List<PaymentResponseDto> findAll(HttpServletResponse response){
         log.info("Listing payments.");
@@ -71,11 +73,12 @@ public class PaymentService {
 
     public List<PaymentResponseDto> findPaymentsByPeriod(LocalDate initialDate, LocalDate finalDate, HttpServletResponse response){
         List<Payment> payments = repository.findByPaymentDateBetweenAndUser(initialDate, finalDate, findUser(response));
+        log.info("Seeking payments for the period {} to {}", initialDate,  finalDate);
         return payments.stream().map(Mapper::toDto).toList();
     }
 
     private User findUser(HttpServletResponse response){
-        return userRepository.findByEmail(response.getHeader("User-Agent"));
+        return userRepository.findByUsername(response.getHeader(USER)).orElseThrow(() -> new ResourceNotFoundException(NO_USER_USERNAME));
     }
 
     private void validateDelete(Long id, User user){
