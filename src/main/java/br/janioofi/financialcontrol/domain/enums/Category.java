@@ -11,7 +11,9 @@ public enum Category {
     HOUSING(3, "Moradia"),
     TRANSPORT(4, "Transporte"),
     TRIPS(5, "Viagens"),
-    HEALTH(6, "Saúde");
+    HEALTH(6, "Saúde"),
+    PERSONAL_EXPENSES(7, "Despesas Pessoais"),
+    CELLPHONE_TV_INTERNET(8, "Celular/TV/Internet");
 
     private final Integer code;
     private final String description;
