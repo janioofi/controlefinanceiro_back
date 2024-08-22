@@ -4,15 +4,25 @@
 Este é um projeto API Rest de um sistema para controle financeiro, onde o usuário poderá criar todos os seus pagamentos, definir o status, método e categoria. Esse sistema possui um sistema de validação, onde todos os usuários terão que criar uma conta para conseguir acessar o sistema. Os pagamentos só poderão ser visualizados pelo próprio usuário; nenhum outro poderá verificar essas informações.
 
 ## Tecnologias Utilizadas
-- Java 17
-- Spring Boot
-- Maven
-- Spring Data
-- Spring Security
-- PostgreSQL
-- JWT
-- Flyway
-
+- [Front-end](https://github.com/janioofi/controlefinanceiro)
+  - JavaScript
+  - TypeScript
+  - Angular
+  - HTML
+  - CSS
+  - Bootstrap
+- Back-end
+  - Java 17
+  - Spring Boot
+  - Maven
+  - Spring Data
+  - Spring Security
+  - PostgreSQL
+  - JWT
+  - Flyway
+- Deploy
+  - Railway
+  - Vercel
 ## Link da Documentação
 
 ```
