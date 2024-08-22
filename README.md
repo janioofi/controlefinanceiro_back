@@ -16,7 +16,7 @@ Este é um projeto API Rest de um sistema para controle financeiro, onde o usuá
 ## Link da Documentação
 
 ```
-https://cotrolefinanceiro.up.railway.app/swagger-ui/index.html
+https://api-cotrolefinanceiro.up.railway.app/swagger-ui/index.html
 ```
 ![documentacao](https://github.com/user-attachments/assets/f2e2750d-4b46-4882-b68c-0833762257f9)
 
