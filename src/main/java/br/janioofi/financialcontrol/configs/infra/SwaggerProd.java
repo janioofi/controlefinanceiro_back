@@ -38,7 +38,7 @@ public class SwaggerProd {
                         addList("Bearer Authentication"))
                 .components(new Components().addSecuritySchemes
                         ("Bearer Authentication", createAPIKeyScheme()))
-                .addServersItem(new Server().url("**"))
+                .addServersItem(new Server().url("https://cotrolefinanceiro.up.railway.app/"))
                 .info(new Info()
                         .title("Financial Control - API")
                         .description("Rest API of a financial control system")
